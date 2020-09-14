@@ -1,0 +1,10 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Student {{student.first_name}} {{ student.second_name }}
+{% endblock %}
+
+{% block content %}
+<h5>{{student.first_name}}{{student.second_name}}</h5>
+<img src="{{ student.photo.url }}">
+{% endblock %}

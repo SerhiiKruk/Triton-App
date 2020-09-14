@@ -1,0 +1,23 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Update Student {{student.first_name}} {{student.second_name}}
+{% endblock %}
+
+{% block content %}
+<form action = "{{ student.get_update_url }}" method = "post" enctype="multipart/form-data" style="width:500px;margin-left:550px; margin-top:100px">
+ {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        {% if field.errors %}
+            <div class = "alert alert-danger">
+               <p style="color:white">{{field.errors}}</p>
+            </div>
+        {% endif %}
+        <p style="color:white">{{field.label}}</p>
+        <p style="color:white">{{field}}</p>
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+{% endblock %}

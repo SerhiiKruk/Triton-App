@@ -1,0 +1,23 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Create Student
+{% endblock %}
+
+{% block content %}
+<form action = "{% url 'student_create' %}" enctype="multipart/form-data" method = "post" style="width:500px; margin-left:550px; margin-top:100px">
+ {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        {% if field.errors %}
+            <div class = "alert alert-danger">
+                {{field.errors}}
+            </div>
+        {% endif %}
+    <p style="color:white">{{field.label}}</p>
+     <p style="color:white">{{field}}</p>
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+{% endblock%}

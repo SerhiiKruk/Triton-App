@@ -1,0 +1,36 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Group {{group.name}}
+{% endblock %}
+
+{% block content %}
+<tbody>
+<table style="width:1200px; margin-left:200px; margin-top:75px" class="table">
+  <thead>
+    <tr class="table-light">
+      <th scope="col">#</th>
+      <th scope="col">First name</th>
+      <th scope="col">Second name</th>
+      <th scope="col">Group</th>
+      <th scope="col">Info</th>
+      <th scope="col">Update</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for student in students %}
+    <tr class="table-light">
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{student.first_name}}</td>
+      <td>{{student.second_name}}</td>
+      <td>{{student.group_id}}</td>
+      <td><a href="{{student.get_absolute_url}}">Detail</a></td>
+      <td><a href="{{student.get_update_url}}">Update</a></td>
+      <td><a href="{{student.get_delete_url}}">Delete</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'Groups/base.html' %}
+{% block title %}
+Groups
+{% endblock %}
+
+{% block content %}
+<div style="width: 1000%;">
+    <div class="jumbotron" style="float: left; width: 475px;height:340px; margin-top:50px; margin-left:250px; background-color:white">
+    <h2>NEW GROUP</h2>
+    <hr class="my-4">
+    <form action="javascript:void(0);" method="POST" onsubmit="addGroup()">
+        <input style = "margin-bottom:10px" class="form-control" type="text" id="add-name" placeholder="New Group">
+        <textarea style = "margin-bottom:10px" class="form-control" type="text" id="add-faculty" placeholder="New Info Group"></textarea>
+        <input style = "margin-left:150px" class="btn btn-primary btn-lg" type="submit" type="submit" value="Add">
+    </form>
+</div>
+<div id="edit-id" class="jumbotron" style="float: left; width: 475px;height:340px;margin-top:50px;margin-left:250px; background-color:white">
+        <h2>EDIT Group</h2>
+        <hr class="my-4">
+        <form action="javascript:void(0);" onsubmit="updateGroup()">
+            <input style = "margin-bottom:10px" class="form-control" type="hidden" id="edit-id">
+            <input style = "margin-bottom:10px" class="form-control" type="text" id="edit-name">
+            <textarea style = "margin-bottom:10px" class="form-control" type="text" id="edit-faculty"></textarea>
+            <input style = "margin-left:150px" class="btn btn-primary btn-lg" type="submit" value="Save">
+        </form>
+    </div>
+  </div>
+    <p id="counter"></p>
+
+    <table class="table" style="margin-left:350px; width:1000px; margin-top:400px">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Faculty</th>
+        </tr>
+        <tbody id="groups"></tbody>
+    </table>
+    {% load static %}
+    <script src="{% static 'js/groups.js' %}"></script>
+    <script type="text/javascript">
+        getGroups();
+    </script>
+{% endblock %}

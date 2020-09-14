@@ -1,0 +1,19 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Delete Student {{student.first_name}} {{ student.second_name }}
+{% endblock %}
+
+{% block content %}
+<form action = "{{student.get_delete_url}}" method="POST">
+    {% csrf_token %}
+      <div class="card" style="width: 18rem; margin-left:665px;margin-top:200px">
+      <div class="card-body">
+    <h5 class="card-title">Delete "{{student.first_name}}{{student.second_name}}"</h5>
+    <p class="card-text">Are you sure want to delete this student?</p>
+    <a class="btn btn-primary" href="{% url 'students_list' %}" role="button">Cancel</a>
+    <button type="submit" name = "button" class = "btn btn-danger">Delete</button>
+  </div>
+</div>
+</form>
+{% endblock %}
