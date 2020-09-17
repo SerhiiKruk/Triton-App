@@ -1,17 +1,18 @@
 from re import match
 
 from django import forms
-from .models import Group, Student
+from .models import Group, Student, Mark
 from django.core.exceptions import ValidationError
 
 class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
-        fields = ['name', 'faculty']
+        fields = ['name', 'faculty', 'course']
 
         widgets = {
-            'name': forms.TextInput(attrs={'class':'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
             'faculty': forms.TextInput(attrs={'class': 'form-control'}),
+            'course': forms.TextInput(attrs={'class': 'form-control'})
         }
 
     def clean_faculty(self):
@@ -25,13 +26,17 @@ class GroupForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ['first_name', 'second_name', 'photo', 'group_id']
+        fields = ['first_name', 'second_name', 'photo', 'group_id', 'date_of_birth', 'phone_number', 'latitude', 'longitude']
 
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'second_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'group_id': forms.Select(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'longitude': forms.TextInput(attrs={'class': 'form-control'}),
+            'latitude': forms.TextInput(attrs={'class': 'form-control'}),
                     }
 
     def clean_first_name(self):
@@ -49,3 +54,16 @@ class StudentForm(forms.ModelForm):
         if res is None:
             raise ValidationError('Wrong second name')
         return new_second_name
+
+class MarkForm(forms.ModelForm):
+    class Meta:
+        model = Mark
+        fields = ['subject', 'type', 'semester', 'date', 'mark']
+
+        widgets = {
+            'subject': forms.Select(attrs={'class': 'form-control'}),
+            'type': forms.Select(attrs={'class': 'form-control'}),
+            'semester': forms.Select(attrs={'class': 'form-control'}),
+            'date': forms.DateInput(attrs={'class': 'form-control'}),
+            'mark': forms.TextInput(attrs={'class': 'form-control'}),
+                  }

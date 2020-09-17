@@ -4,8 +4,14 @@
 Update Group {{group.name}}
 {% endblock %}
 
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/group_marks_forms.css'%}">
+{% endblock %}
+
 {% block content %}
-<form action = "{% url 'group_update' slug=group.slug %}" method = "post" style="width:500px; margin-left:550px; margin-top:150px">
+<div id="main-div">
+<form id="main-form" action = "{% url 'group_update' slug=group.slug %}" method = "post">
  {% csrf_token %}
     {% for field in form %}
     <div class="form-group">
@@ -14,10 +20,11 @@ Update Group {{group.name}}
                 {{field.errors}}
             </div>
         {% endif %}
-        <p style="color:white">{{field.label}}</p>
-    {{field}}
+        {{field.label}}
+        {{field}}
     </div>
     {% endfor %}
     <button type="submit" class="btn btn-success">Update</button>
 </form>
+</div>
 {% endblock %}

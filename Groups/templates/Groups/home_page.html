@@ -5,12 +5,21 @@
 StepUnder
 {% endblock %}
 
-{% block content %}
-<div class="jumbotron" style="margin-left:450px;margin-top:110px;width:800px">
-  <h1 class="display-4">Welcome to StepUnder!</h1>
-  <p class="lead">This is a simple site that makes your study easier.</p>
-  <hr class="my-4">
-  <a class="btn btn-primary btn-lg" href="#" role="button">Register</a>
-</div>
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
 
+{% block content %}
+  <div id="main-div">
+    <div id="secondary-div">
+      <h1 class="display-4">Hello, student!</h1>
+      <p class="lead">This is a simple web-site to make your study more easier and comfortable.</p>
+      <hr class="my-4">
+      <p>Check the schedule, see you marks and look for another students</p>
+      <p class="lead">
+      <a class="btn btn-info btn-lg" href="#" role="button">Sign in</a>
+      </p>
+    </div>
+  </div>
 {% endblock %}

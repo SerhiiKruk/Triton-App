@@ -1,20 +1,48 @@
+import base64
+import io
+
+from PIL import Image
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.urls import reverse
 from django.views import View, generic
 from django.shortcuts import get_object_or_404
-from .models import Group, Student
-from django.views.generic import View
-from .forms import GroupForm, StudentForm
+from rest_framework.decorators import api_view
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+from .models import Group, Student, Mark, Subject
+from .forms import GroupForm, StudentForm, MarkForm
+
 from rest_framework.viewsets import ModelViewSet
-from .serializers import GroupSerializer, StudentSerializer
+from .serializers import GroupSerializer, StudentSerializer, SubjectSerializer
+from django.http.response import JsonResponse
+from rest_framework.parsers import JSONParser
+from rest_framework import status
+
+def any(request):
+    return render(request, 'Groups/test1.html')
+
+def stat(request, slug):
+    list = []
+    group = Group.objects.get(slug=slug)
+    list_stud = Student.objects.filter(group_id=group)
+    for student in list_stud:
+        count = student.marks.count()
+        sum = 0
+        for mark in student.marks.all():
+            sum += mark.mark
+        avg = sum / count
+        data = {
+            "student":"{} {}".format(student.first_name, student.second_name),
+            "avg": avg
+        }
+        list.append(data)
+    return JsonResponse(list, safe=False)
 
 def home_page(request):
     return render(request, 'Groups/home_page.html')
-
-def groups_api(request):
-    return render(request, 'Groups/api_groups_list.html')
 
 class GroupsList(View):
     def get(self, request):
@@ -35,7 +63,8 @@ class StudentsList(View):
         search_query = request.GET.get('search', '')
 
         if(search_query):
-            students = Student.objects.filter(Q(first_name__icontains=search_query) or Q(second_name__icontains=search_query)).order_by('second_name')
+            students = Student.objects.filter(Q(first_name__icontains=search_query)
+                                              or Q(second_name__icontains=search_query)).order_by('second_name')
             search = '&search={}'.format(search_query)
         else:
             students = Student.objects.all().order_by('second_name')
@@ -88,7 +117,11 @@ class GroupDetail(View):
     def get(self, request, slug):
         group = get_object_or_404(Group, slug__iexact=slug)
         students = Student.objects.filter(group_id=group)
-        return render(request, 'Groups/group_detail.html', context={'students': students})
+        return render(request, 'Groups/group_detail.html', context={'students': students, 'group': group})
+
+class GroupStats(View):
+    def get(self, request, slug):
+        return render(request, 'Groups/test1.html', context={'slug': slug})
 
 class GroupCreate(View):
     def get(self, request):
@@ -138,10 +171,16 @@ class StudentUpdate(View):
 
     def post(self, request, slug):
         student = Student.objects.get(slug__iexact=slug)
+        prev_group = student.group_id
         bound_form = StudentForm(request.POST, request.FILES, instance=student)
 
         if bound_form.is_valid():
+            prev_group.count -= 1;
+            prev_group.save()
             new_student = bound_form.save()
+            new_group = new_student.group_id
+            new_group.count += 1
+            new_group.save()
             return redirect(new_student)
         return render(request, 'Groups/student_update.html', context = {'form':bound_form, 'student':student})
 
@@ -165,12 +204,89 @@ class StudentDelete(View):
         student.delete()
         return redirect('students_list')
 
-    ######## WEB API ################3
+class MarkList(View):
+    def get(self, request, slug):
+        student = Student.objects.get(slug=slug)
+        return render(request, 'Groups/marks_list.html', context={'student': student})
 
-class GroupView(ModelViewSet):
+class MarkCreate(View):
+    def get(self, request, slug):
+        form = MarkForm()
+        return render(request, 'Groups/mark_create.html', context={'form': form, 'slug': slug})
+
+    def post(self, request, slug):
+        bound_form = MarkForm(request.POST)
+
+        if bound_form.is_valid():
+            new_mark = bound_form.save()
+            student = Student.objects.get(slug=slug)
+            student.marks.add(new_mark)
+            return redirect('marks_list', student.slug)
+        return render(request, 'Groups/mark_create.html', context={'form': bound_form, 'slug': slug})
+
+class MarkUpdate(View):
+    def get(self, request, slug, id):
+        mark = Mark.objects.get(id__iexact=id)
+        bound_form = MarkForm(instance=mark)
+        return render(request, 'Groups/mark_update.html', context={'form': bound_form, 'slug': slug, 'id': id})
+
+    def post(self, request, slug, id):
+        mark = Mark.objects.get(id__iexact=id)
+        bound_form = MarkForm(request.POST, instance=mark)
+
+        if bound_form.is_valid():
+            new_mark = bound_form.save()
+            return redirect('marks_list', slug)
+        return render(request, 'Groups/mark_update.html', context={'form': bound_form, 'slug': slug, 'id': id})
+
+class MarkDelete(View):
+    def get(self, request, slug, id):
+        mark = Mark.objects.get(id__iexact=id)
+        return render(request, 'Groups/mark_delete.html', context={'mark': mark, 'slug': slug, 'id': id})
+
+    def post(self, request, slug, id):
+        mark = Mark.objects.get(id__iexact=id)
+        mark.delete()
+        return redirect('marks_list', slug)
+
+
+######## WEB API ################3
+## for students
+
+class StudentsView(ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def perform_create(self, serializer):
+        group = get_object_or_404(Group, id=self.request.data.get('group_id'))
+        return serializer.save(group_id=group)
+
+class SingleStudentView(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class GroupsView(ListCreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-class StudentView(ModelViewSet):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    def perform_create(self, serializer):
+        return serializer.save()
+
+class SingleGroupView(RetrieveUpdateDestroyAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+class SubjectsView(ListCreateAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+    def perform_create(self, serializer):
+        return serializer.save()
+
+class SingleSubjectView(RetrieveUpdateDestroyAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+
+
+

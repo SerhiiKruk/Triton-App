@@ -4,7 +4,42 @@
 Student {{student.first_name}} {{ student.second_name }}
 {% endblock %}
 
+{% block add_src %}
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+<style type="text/css"></style>
+
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/student_detail.css' %}">
+{% endblock %}
+
+
 {% block content %}
-<h5>{{student.first_name}}{{student.second_name}}</h5>
-<img src="{{ student.photo.url }}">
+<div id="main-div">
+<div class="card">
+  <img src="{{student.photo.url}}" class="card-img-top" alt="No image">
+  <div class="card-body">
+    <h4 class="card-title">{{student.first_name}} {{student.second_name}}</h4>
+  </div>
+  <ul class="list-group list-group-flush">
+      <li class="list-group-item">Group: {{student.group_id}}</li>
+      <li class="list-group-item">Date of birth: {{student.date_of_birth}}</li>
+      <li class="list-group-item">Phone number: {{student.phone_number}}</li>
+  </ul>
+  <div class="card-body">
+     <a class="btn btn-info btn-lg" href="{% url 'marks_list' slug=student.slug %}" role="button">Marks</a>
+  </div>
+</div>
+</div>
+<!--    </div>-->
+<!--    <div id="right">-->
+<!--      <div id="map" style = "width:550px;height:350px; margin-top:250px">-->
+<!-- {% load static %}-->
+<!--    <script src="{% static 'js/DetailMap.js' %}"></script>-->
+<!--    <script type="text/javascript">-->
+<!--    showUser({{student.longitude}},{{student.latitude}});-->
+<!--    </script>-->
+
+<!--    </div>-->
 {% endblock %}

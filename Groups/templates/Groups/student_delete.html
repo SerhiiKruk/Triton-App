@@ -5,9 +5,10 @@ Delete Student {{student.first_name}} {{ student.second_name }}
 {% endblock %}
 
 {% block content %}
-<form action = "{{student.get_delete_url}}" method="POST">
+<div style="text-align:center; margin-top:100px">
+<form action = "{{student.get_delete_url}}" method="POST" style="display:inline-block">
     {% csrf_token %}
-      <div class="card" style="width: 18rem; margin-left:665px;margin-top:200px">
+      <div class="card">
       <div class="card-body">
     <h5 class="card-title">Delete "{{student.first_name}}{{student.second_name}}"</h5>
     <p class="card-text">Are you sure want to delete this student?</p>
@@ -16,4 +17,5 @@ Delete Student {{student.first_name}} {{ student.second_name }}
   </div>
 </div>
 </form>
+</div>
 {% endblock %}
