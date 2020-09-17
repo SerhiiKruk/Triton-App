@@ -1,8 +1,8 @@
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.views import View
+from django.views import View, generic
 from django.shortcuts import get_object_or_404
 from .models import Group, Student
 from django.views.generic import View
@@ -16,27 +16,56 @@ def home_page(request):
 def groups_api(request):
     return render(request, 'Groups/api_groups_list.html')
 
-def groups_list(request):
-    search_query = request.GET.get('search', '')
+class GroupsList(View):
+    def get(self, request):
+        search_query = request.GET.get('search', '')
 
-    if (search_query):
-        students = Group.objects.filter(
-            Q(name__icontains=search_query)).order_by('name')
-    else:
-        groups = Group.objects.all().order_by('name')
+        if (search_query):
+            groups = Group.objects.filter(Q(name__icontains=search_query)).order_by('name')
+            search = '&search={}'.format(search_query)
+        else:
+            groups = Group.objects.all().order_by('name')
+            search = ''
 
-    paginator = Paginator(groups, 10)
+        context = get_context_pagintaion(request, groups, search)
+        return render(request, 'Groups/groups_list.html', context={'context': context})
+
+class StudentsList(View):
+    def get(self, request):
+        search_query = request.GET.get('search', '')
+
+        if(search_query):
+            students = Student.objects.filter(Q(first_name__icontains=search_query) or Q(second_name__icontains=search_query)).order_by('second_name')
+            search = '&search={}'.format(search_query)
+        else:
+            students = Student.objects.all().order_by('second_name')
+            search = ''
+        context = get_context_pagintaion(request, students, search)
+        return render(request, 'Groups/students_list.html', context={'context': context})
+
+# Pagination
+def get_context_pagintaion(request, objects, search):
+    paginator = Paginator(objects, 10)
     page_number = request.GET.get('page', 1)
-    page = paginator.page(page_number)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_number = 1
+        page = paginator.page(page_number)
+    except EmptyPage:
+        page_number = 1
+        page = paginator.page(page_number)
+
     is_paginated = page.has_other_pages()
 
     if page.has_previous():
-        prev_url = '?page={}'.format(page.previous_page_number())
+        prev_url = '?page={}'.format(page.previous_page_number()) + search
     else:
         prev_url = ''
 
     if page.has_next():
-        next_url = '?page={}'.format(page.next_page_number())
+        next_url = '?page={}'.format(page.next_page_number()) + search
     else:
         next_url = ''
 
@@ -47,41 +76,8 @@ def groups_list(request):
         'next_url': next_url,
         'prev_url': prev_url,
     }
-
-    return render(request, 'Groups/groups_list.html', context={'context': context})
-
-
-def students_list(request):
-    search_query = request.GET.get('search', '')
-
-    if(search_query):
-        students = Student.objects.filter(Q(first_name__icontains=search_query) or Q(second_name__icontains=search_query)).order_by('second_name')
-    else:
-        students = Student.objects.all().order_by('second_name')
-
-    paginator = Paginator(students, 10)
-    page_number = request.GET.get('page', 1)
-    page = paginator.page(page_number)
-    is_paginated = page.has_other_pages()
-    if page.has_previous():
-        prev_url = '?page={}'.format(page.previous_page_number())
-    else:
-        prev_url = ''
-
-    if page.has_next():
-        next_url = '?page={}'.format(page.next_page_number())
-    else:
-        next_url = ''
-
-    context = {
-        'page_object': page,
-        'page_number': page_number,
-        'is_paginated': is_paginated,
-        'next_url': next_url,
-        'prev_url': prev_url,
-    }
-
-    return render(request, 'Groups/students_list.html', context={'context': context})
+    return context
+# end pagination
 
 class StudentDetail(View):
     def get(self, request, slug):
@@ -114,7 +110,6 @@ class StudentCreate(View):
 
     def post(self, request):
         bound_form = StudentForm(request.POST, request.FILES)
-
         if bound_form.is_valid():
             new_student = bound_form.save()
             return redirect('students_list')

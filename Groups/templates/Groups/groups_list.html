@@ -5,9 +5,9 @@ Groups
 {% endblock  %}
 
 {% block search %}
-<form class="form-inline my-2 my-lg-0" action = "{% url 'students_list' %}">
+<form class="form-inline my-2 my-lg-0" action = "{% url 'groups_list' %}">
   <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name = "search">
-  <button type="button" class="btn btn-success btn-sm" type="submit">Search</button>
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 </form>
 {% endblock %}
 
@@ -54,11 +54,11 @@ Groups
     {% for n in context.page_object.paginator.page_range %}
     {% if n == context.page_object.number %}
         <li class="page-item active">
-          <a class = "page-link" href="?page={{n}}">{{n}}<span class="sr-only">(current)</span></a>
+          <a class = "page-link" href="?page={{n}}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{n}}<span class="sr-only">(current)</span></a>
         </li>
       {% elif n > context.page_number|add:-3 and n < context.page_number|add:3 %}
         <li class = "page-item">
-          <a class = "page-link" href="?page={{n}}">{{n}}</a>
+          <a class = "page-link" href="?page={{n}}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{n}}</a>
         </li>
       {% endif %}
     {% endfor %}

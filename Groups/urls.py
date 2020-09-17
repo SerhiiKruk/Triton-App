@@ -14,8 +14,8 @@ router.register('api/student', StudentView)
 urlpatterns = [
     path('api/groups', views.groups_api, name='api_groups_list'),
     path('', views.home_page, name='home_page'),
-    path('groups', views.groups_list, name='groups_list'),
-    path('students', views.students_list, name='students_list'),
+    path('groups', views.GroupsList.as_view(), name='groups_list'),
+    path('students', views.StudentsList.as_view(), name='students_list'),
     path('student/create/', StudentCreate.as_view(), name='student_create'),
     path('student/<str:slug>/', StudentDetail.as_view(), name='student_detail'),
     path('student/<str:slug>/delete', StudentDelete.as_view(), name='student_delete'),
