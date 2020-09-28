@@ -64,19 +64,16 @@ Students
 </table>
 {% else %}
 <div id="empty_list">
-    <h1 class="display-4" >No marks here yet</h1>
+    <h1 class="display-4" >No students here yet</h1>
     <p class="lead"></p>
     <p  class="lead">
-    <a class="btn btn-info btn-lg" href="{% url 'mark_create' slug=student.slug %}" role="button">New one</a>
+    <a class="btn btn-info btn-lg" href="{% url 'student_create' %}" role="button">New one</a>
     </p>
 </div>
-{% block footer-bottom %}
-fixed-bottom
-{% endblock %}
 {% endif %}
 <!-- Pagination -->
 {% if context.is_paginated %}
-  <nav style="margin-left:650px">
+  <nav>
   <ul class="pagination">
     <li class="page-item {% if not context.prev_url %}disabled{% endif %}">
       <a class="page-link" href="{{context.prev_url}}" tabindex="-1" aria-disabled="true">Previous</a>

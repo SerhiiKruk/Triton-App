@@ -1,34 +1,50 @@
 {% extends 'Groups/base.html' %}
 
 {% block title %}
-Update Student {{student.first_name}} {{student.second_name}}
+Create Student
 {% endblock %}
 
 {% block add_src %}
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/student_create_update.css' %}">
+
 {% endblock %}
 
 {% block content %}
-<div style="text-align:left">
-<form action = "{{ student.get_update_url }}" method = "post" enctype="multipart/form-data" style="display:inline-block">
- {% csrf_token %}
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<link
+rel="stylesheet"
+href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+type="text/css"/>
+<!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <div class = "row">
+    <div class="column">
+<form id='main-form' action = "{% url 'student_update' slug=student.slug %}" enctype="multipart/form-data" method = "post">
+    {% csrf_token %}
     {% for field in form %}
     <div class="form-group">
         {% if field.errors %}
             <div class = "alert alert-danger">
-               <p style="color:black">{{field.errors}}</p>
+                {{field.errors}}
             </div>
         {% endif %}
-        <p style="color:black">{{field.label}}</p>
-        <p style="color:black">{{field}}</p>
+    {{field.label}}{{field}}
     </div>
     {% endfor %}
-    <button type="submit" class="btn btn-success">Update</button>
+    <button type="submit" class="btn btn-success">Create</button>
 </form>
-<div id="map" style = "width:350px;height:350px"></div>
-</div>
+    </div>
+    <div class="column">
+   <div id="map">
+    </div>
+    </div>
+        </div>
 {% load static %}
 <script src="{% static 'js/CreateMap.js' %}"></script>
 {% endblock %}

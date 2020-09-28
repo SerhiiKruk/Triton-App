@@ -15,6 +15,12 @@ class GroupForm(forms.ModelForm):
             'course': forms.TextInput(attrs={'class': 'form-control'})
         }
 
+    def clean_course(self):
+        new_course = self.cleaned_data['course']
+        if(new_course<0 or new_course>6):
+            return ValidationError('No such course. Choose 1-6')
+        return new_course
+
     def clean_faculty(self):
         new_faculty = self.cleaned_data['faculty']
         pattern = r'^[A-Z][a-z]+'
@@ -26,7 +32,7 @@ class GroupForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ['first_name', 'second_name', 'photo', 'group_id', 'date_of_birth', 'phone_number', 'latitude', 'longitude']
+        fields = ['first_name', 'second_name', 'photo', 'group_id', 'date_of_birth', 'phone_number', 'address', 'latitude', 'longitude']
 
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -35,6 +41,7 @@ class StudentForm(forms.ModelForm):
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'group_id': forms.Select(attrs={'class': 'form-control'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
             'longitude': forms.TextInput(attrs={'class': 'form-control'}),
             'latitude': forms.TextInput(attrs={'class': 'form-control'}),
                     }

@@ -8,27 +8,10 @@ Create Student
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
-<style>
-* {
-  box-sizing: border-box;
-}
-.column {
-  float: center;
-  width: 50%;
-  margin-top:50px
-}
 
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-@media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-  }
-}
-</style>
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/student_create_update.css' %}">
+
 {% endblock %}
 
 {% block content %}
@@ -41,9 +24,9 @@ type="text/css"/>
 <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
     <div class = "row">
-    <div class="column" style="text-align:center">
-<form action = "{% url 'student_create' %}" enctype="multipart/form-data" method = "post" style="display:inline-block">
- {% csrf_token %}
+    <div class="column">
+<form id='main-form' action = "{% url 'student_create' %}" enctype="multipart/form-data" method = "post">
+    {% csrf_token %}
     {% for field in form %}
     <div class="form-group">
         {% if field.errors %}
@@ -51,14 +34,14 @@ type="text/css"/>
                 {{field.errors}}
             </div>
         {% endif %}
-    <p style="color:black">{{field.label}}{{field}}</p>
+    {{field.label}}{{field}}
     </div>
     {% endfor %}
     <button type="submit" class="btn btn-success">Create</button>
 </form>
     </div>
     <div class="column">
-   <div id="map" style="display:inline-block;width:600px;height:600px">
+   <div id="map">
     </div>
     </div>
         </div>

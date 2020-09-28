@@ -21,25 +21,25 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
-def any(request):
-    return render(request, 'Groups/test1.html')
-
-def stat(request, slug):
-    list = []
-    group = Group.objects.get(slug=slug)
-    list_stud = Student.objects.filter(group_id=group)
-    for student in list_stud:
-        count = student.marks.count()
-        sum = 0
-        for mark in student.marks.all():
-            sum += mark.mark
-        avg = sum / count
-        data = {
-            "student":"{} {}".format(student.first_name, student.second_name),
-            "avg": avg
-        }
-        list.append(data)
-    return JsonResponse(list, safe=False)
+# def any(request):
+#     return render(request, 'Groups/test1.html')
+#
+# def stat(request, slug):
+#     list = []
+#     group = Group.objects.get(slug=slug)
+#     list_stud = Student.objects.filter(group_id=group)
+#     for student in list_stud:
+#         count = student.marks.count()
+#         sum = 0
+#         for mark in student.marks.all():
+#             sum += mark.mark
+#         avg = sum / count
+#         data = {
+#             "student":"{} {}".format(student.first_name, student.second_name),
+#             "avg": avg
+#         }
+#         list.append(data)
+#     return JsonResponse(list, safe=False)
 
 def home_page(request):
     return render(request, 'Groups/home_page.html')
@@ -119,9 +119,11 @@ class GroupDetail(View):
         students = Student.objects.filter(group_id=group)
         return render(request, 'Groups/group_detail.html', context={'students': students, 'group': group})
 
-class GroupStats(View):
+class GroupMap(View):
     def get(self, request, slug):
-        return render(request, 'Groups/test1.html', context={'slug': slug})
+        group = Group.objects.get(slug=slug)
+        students = Student.objects.filter(group_id=group)
+        return render(request, 'Groups/group_map.html', context={'students': students})
 
 class GroupCreate(View):
     def get(self, request):
@@ -201,6 +203,9 @@ class StudentDelete(View):
 
     def post(self, request, slug):
         student = Student.objects.get(slug__iexact=slug)
+        group = student.group_id
+        group.count = group.count - 1
+        group.save()
         student.delete()
         return redirect('students_list')
 
