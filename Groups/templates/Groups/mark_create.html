@@ -1,0 +1,30 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Add Mark
+{% endblock %}
+
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/group_marks_forms.css'%}">
+{% endblock %}
+
+{% block content %}
+<div id="main-div">
+<form id="main-form" action = "{% url 'mark_create' slug=slug %}" enctype="multipart/form-data" method = "post">
+ {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        {% if field.errors %}
+            <div class = "alert alert-danger">
+                {{field.errors}}
+            </div>
+        {% endif %}
+        {{field.label}}
+        {{field}}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+{% endblock %}
+</div>

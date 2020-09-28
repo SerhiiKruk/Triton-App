@@ -1,0 +1,12 @@
+#main-div{
+text-align:center;
+margin-top:100px;
+}
+
+#main-form{
+display: inline-block;
+}
+
+.card{
+width: 18rem;
+}

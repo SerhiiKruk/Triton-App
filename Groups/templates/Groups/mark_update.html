@@ -1,0 +1,30 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Update mark
+{% endblock %}
+
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/group_marks_forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="main-div">
+<form id="main-form" action = "{% url 'mark_update' slug=slug id=id %}" method = "post">
+ {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        {% if field.errors %}
+            <div class = "alert alert-danger">
+                {{field.errors}}
+            </div>
+        {% endif %}
+        {{field.label}}
+        {{field}}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+</div>
+{% endblock %}

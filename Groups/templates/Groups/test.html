@@ -1,0 +1,65 @@
+{% extends 'Groups/base.html' %}
+{% block js %}
+<script src="https://d3js.org/d3.v4.js"></script>
+{% endblock %}
+<!-- Create a div where the graph will take place -->
+{% block content %}
+<div id="my_dataviz" style="max-width:1000px;"></div>
+<script>
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 30, bottom: 40, left: 90},
+    width = 500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Parse the Data
+d3.json("{% url 'stat_url' slug=slug %}", function(data) {
+
+  // Add X axis
+  var x = d3.scaleLinear()
+    .domain([0, 100])
+    .range([ 0, width]);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
+
+  // Y axis
+  var y = d3.scaleBand()
+    .range([ 0,100 ])
+    .domain(data.map(function(d) { return d.student; }))
+    .padding(.1);
+  svg.append("g")
+    .call(d3.axisLeft(y))
+
+  //Bars
+  svg.selectAll("myRect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", x(0) )
+    .attr("y", function(d) { return y(d.student); })
+    .attr("width", function(d) { return x(d.avg); })
+    .attr("height", y.bandwidth() )
+    .attr("fill", "#69b3a2")
+
+
+    // .attr("x", function(d) { return x(d.student); })
+    // .attr("y", function(d) { return y(d.avg); })
+    // .attr("width", x.bandwidth())
+    // .attr("height", function(d) { return height - y(d.avg); })
+    // .attr("fill", "#69b3a2")
+
+})
+</script>
+{% endblock %}
