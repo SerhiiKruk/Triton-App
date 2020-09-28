@@ -4,9 +4,14 @@
 Delete Student {{student.first_name}} {{ student.second_name }}
 {% endblock %}
 
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/group_marks_forms.css' %}">
+{% endblock %}
+
 {% block content %}
-<div style="text-align:center; margin-top:100px">
-<form action = "{{student.get_delete_url}}" method="POST" style="display:inline-block">
+<div id="main-div">
+<form action = "{{student.get_delete_url}}" method="POST" id="main-form">
     {% csrf_token %}
       <div class="card">
       <div class="card-body">

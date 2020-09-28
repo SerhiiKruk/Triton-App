@@ -30,7 +30,7 @@ class StudentSerializer(ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['first_name', 'second_name', 'photo', 'group_id', 'date_of_birth', 'phone_number', 'longitude', 'latitude']
+        fields = ['first_name', 'second_name', 'photo', 'group_id', 'date_of_birth', 'phone_number', 'address','longitude', 'latitude']
 
 class SubjectSerializer(ModelSerializer):
     class Meta:

@@ -9,10 +9,6 @@ from .views import *
 urlpatterns = [
     path('', views.home_page, name='home_page'),
 
-    path('any', views.any),
-
-    path('stat/<str:slug>', views.stat, name='stat_url'),
-
     path('api/students', views.StudentsView.as_view()),
     path('api/student/<str:id>', views.SingleStudentView.as_view()),
     path('api/groups', views.GroupsView.as_view()),
@@ -36,9 +32,10 @@ urlpatterns = [
 
     path('group/create/', GroupCreate.as_view(), name='group_create'),
     path('group/<str:slug>/', GroupDetail.as_view(), name='group_detail'),
-    path('group/<str:slug>/stats', GroupStats.as_view(), name='group_stats'),
+    path('group/<str:slug>/map', GroupMap.as_view(), name='group_map'),
     path('group/<str:slug>/update/', GroupUpdate.as_view(), name='group_update'),
     path('group/<str:slug>/delete/', GroupDelete.as_view(), name='group_delete'),
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
