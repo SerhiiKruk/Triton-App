@@ -1,0 +1,35 @@
+
+.column {
+  float: center;
+  width: 50%;
+  margin-top:50px;
+  text-align:center;
+}
+#main-form
+{
+display:inline-block;
+}
+#map
+{
+display:inline-block;
+width:550px;
+height:550px;
+}
+.row{
+width:100%
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+@media screen and (max-width: 1400px) {
+  .column {
+    width: 100%;
+  }
+  #map
+  {
+    width:400px;
+    height:400px;
+  }
+}

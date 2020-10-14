@@ -1,7 +1,11 @@
 from re import match
 
 from django import forms
-from .models import Group, Student, Mark
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+from .models import Group, Student, Mark, Profile
 from django.core.exceptions import ValidationError
 
 class GroupForm(forms.ModelForm):
@@ -39,7 +43,7 @@ class StudentForm(forms.ModelForm):
             'second_name': forms.TextInput(attrs={'class': 'form-control'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'group_id': forms.Select(attrs={'class': 'form-control'}),
+            'group_id': forms.Select(attrs={'class': 'form-control', 'name': 'group'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'longitude': forms.TextInput(attrs={'class': 'form-control'}),
@@ -74,3 +78,28 @@ class MarkForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'class': 'form-control'}),
             'mark': forms.TextInput(attrs={'class': 'form-control'}),
                   }
+
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2', 'email']
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['favorite_lang', 'student']
+
+    # widgets = {
+    #     'student': forms.Select(attrs={'class': 'form-control'})
+    # }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['student'].queryset = Student.objects.none()
+
+        if 'student' in self.data:
+            self.fields['student'].queryset = Student.objects.all()
+
+        elif self.instance.id:
+            self.fields['student'].queryset = Student.objects.get(id=self.instance.student.id)
+

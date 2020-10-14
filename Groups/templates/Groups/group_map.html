@@ -1,0 +1,31 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Map
+{% endblock %}
+
+{% block add_src %}
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+<script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/map.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+<div id="map">
+   {% load static %}
+    <script src="{% static 'js/UsersMap.js' %}"></script>
+    <script type="text/javascript">
+        init();
+        {% for student in students %}
+        addcoordinates({{student.longitude}}, {{student.latitude}}, "{{student.first_name}} {{student.second_name}}");
+        {% endfor %}
+    </script>
+</div>
+</div>
+{% endblock %}

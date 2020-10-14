@@ -1,8 +1,45 @@
 .card{
 display:inline-block;
+text-align:center;
 width:26rem;
 }
 
-#main-div{
-text-align: center;
+#container{
+display:inline-block;
+width:850px;
+margin-top:100px;
+}
+
+.row{
+width:100%
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.column {
+  float: center;
+  width: 40%;
+  margin-top:50px;
+  text-align:center;
+}
+#map{
+height:500px; width:500px
+}
+@media screen and (max-width: 1400px) {
+  .column {
+    width: 100%;
+  }
+  #map{
+  display:inline-block;
+  width:400px;
+  height:400px;
+  }
+  #container{
+  display:inline-block;
+  width:500px;
+  height:500px;
+  }
 }

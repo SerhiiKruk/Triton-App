@@ -21,4 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('Groups.urls')),
+    path('social-auth/', include('social_django.urls', namespace='social'))
 ]
+
+#handler404 = 'Groups.views.my_custom_page_not_found_view'

@@ -1,0 +1,26 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Sign out
+{% endblock %}
+
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="main-div">
+  <form action = "{% url 'signout_url' %}" method="POST" id="main-form">
+    {% csrf_token %}
+      <div class="card">
+      <div class="card-body">
+    <h5 class="card-title">Sign out</h5>
+    <p class="card-text">Are you sure want to sign out?</p>
+    <a class="btn btn-primary" href="{% url 'home_page' %}" role="button">Cancel</a>
+    <button type="submit" name = "button" class = "btn btn-danger">Sign Out</button>
+  </div>
+</div>
+</form>
+</div>
+{% endblock %}

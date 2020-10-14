@@ -1,4 +1,7 @@
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.shortcuts import reverse
 from django.db import models
 from django.utils.text import slugify
@@ -7,6 +10,11 @@ from time import time
 def gen_slug(s):
     new_slug = slugify(s, allow_unicode=True)
     return new_slug + "-" + str(int(time()))
+
+class BaseModel(models.Model):
+    objects = models.Manager()
+    class Meta:
+        abstract = True
 
 class Group(models.Model):
     name = models.CharField(max_length=40, unique=True)
@@ -45,16 +53,21 @@ class Mark(models.Model):
     semester = models.IntegerField(choices=Semester.choices)
     date = models.DateField(auto_now_add=False, auto_now=False)
 
-    #def get_update_url(self):
-     #   return reverse('mark_update', kwargs={'id': self.id})
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    favorite_lang = models.CharField(default="C++", max_length=25)
+    student = models.OneToOneField('Student', on_delete=models.CASCADE, unique=True, null=True)
 
-   # def get_delete_url(self):
-    #    return reverse('mark_delete', kwargs={'id': self.id})
-
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
 
 class Student(models.Model):
-    first_name = models.CharField(max_length = 20)
-    second_name = models.CharField(max_length = 20)
+    is_registered = models.BooleanField(default=False)
+    first_name = models.CharField(max_length=20)
+    second_name = models.CharField(max_length=20)
     date_of_birth = models.DateField(auto_now_add=False, auto_now=False)
     slug = models.SlugField(max_length=150, unique=True)
     photo = models.ImageField(blank=False)
@@ -65,6 +78,7 @@ class Student(models.Model):
     marks = models.ManyToManyField('Mark')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    avg_mark = models.FloatField(default=0)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.second_name)
@@ -103,7 +117,6 @@ class Lesson(models.Model):
     subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
     type = models.TextField(Type.choices)
     teacher = models.TextField(max_length=100)
-
 
 
 

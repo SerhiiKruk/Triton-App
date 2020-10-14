@@ -1,0 +1,18 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+GPA Rating
+{% endblock %}
+
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/gpa.css'%}">
+{% endblock %}
+
+{% block content %}
+<div id="gpa"></div>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+  Highcharts.chart('gpa', {{ chart|safe }});
+</script>
+{% endblock %}

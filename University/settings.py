@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'Groups',
+    'social_django',
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -49,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'University.urls'
@@ -64,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -82,6 +87,13 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+SOCIAL_AUTH_GITHUB_KEY = 'ec5d1282042454baeb1c'
+SOCIAL_AUTH_GITHUB_SECRET = '211efb6ad28efbaf76d19e31cd3caaec3e1df3b9'
 
 
 # Password validation
@@ -116,14 +128,24 @@ USE_L10N = True
 
 USE_TZ = True
 
+CRISPY_TEMPLATE_PACK="bootstrap4"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'stepunderdjango@gmail.com'
+EMAIL_HOST_PASSWORD = 'auba1712'
+EMAIL_PORT = 587
+
+LOGIN_URL = 'signin_url'
+LOGOUT_URL = 'signout_url'
+LOGIN_REDIRECT_URL = 'home_page'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
-LOGIN_REDIRECT_URL = '/'

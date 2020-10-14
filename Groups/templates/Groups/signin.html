@@ -1,0 +1,35 @@
+{% extends 'Groups/base.html' %}
+
+{% block title %}
+Login Form
+{% endblock %}
+
+{% block add_src %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'css/forms.css'%}">
+{% endblock %}
+
+{% block content %}
+<div id="main-div">
+  <h1>Login</h1>
+  <form action="{% url 'signin_url' %}" method="post" id="main-form">
+      {% csrf_token %}
+      <div class="form-group">
+      <input type="text" class="form-control sgn" placeholder="Username" name="username">
+    </div>
+     <div class="form-group">
+      <input type="password" class="form-control sgn"  placeholder="Password" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+  </form>
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+     {{message}}
+    </div>
+    {% endfor %}
+  <p> Don’t have account yet?  <a href = "{% url 'signup_url' %}">Sign Up</a></p>
+  <p><a href="{% url 'social:begin' 'github' %}">Sign with Github</a></p>
+</div>
+
+{% endblock %}
+

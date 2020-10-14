@@ -32,17 +32,16 @@
     <a class="navbar-brand" href="{% url 'home_page' %}">Home</a>
     <a class="navbar-brand" href="{% url 'groups_list' %}">Groups</a>
     <a class="navbar-brand" href="{% url 'students_list' %}">Students</a>
-    <a class="navbar-brand"  href="#">Schedule</a>
-    <a class="navbar-brand"  href="#">Profile</a>
+    <a class="navbar-brand" href="{% url 'rating' %}">Rating</a>
+    <a class="navbar-brand" href="{% url 'profile' %}">Profile</a>
+
         {% block search %}
         {% endblock %}
     </nav>
      </header>
     <body>
-      <main>
           {% block content %}
           {% endblock %}
-      </main>
     </body>
 
 <div class="container"></div>

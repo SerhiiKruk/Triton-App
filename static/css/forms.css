@@ -10,3 +10,12 @@ display: inline-block;
 .card{
 width: 18rem;
 }
+
+#id_student{
+   width:100%;
+ }
+
+.sgn{
+width:350px;
+height:75px;
+}

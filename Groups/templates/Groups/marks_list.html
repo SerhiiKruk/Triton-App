@@ -11,6 +11,7 @@ Marks {{student.second_name}}
 
 {% block content %}
 {% if student.marks.count > 0 %}
+<h5>Average:{{student.avg_mark}}</h5>
 <table class="table table-dark">
   <thead>
     <tr>
