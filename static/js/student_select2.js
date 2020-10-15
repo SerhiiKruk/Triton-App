@@ -2,7 +2,7 @@ $(document).ready(function () {
         $('#id_student').select2({
             theme: "classic",
             ajax: {
-                url: 'http://pyhedgehog.pythonanywhere.com/add_profile/',
+                url: 'http://hedgehog94.pythonanywhere.com/add_profile/',
                 delay: 500,
                 dataType: 'json',
                 processResults: function (data) {
