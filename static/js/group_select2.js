@@ -2,7 +2,7 @@ $(document).ready(function () {
         $('#id_group_id').select2({
             theme: "classic",
             ajax: {
-                url: 'http://127.0.0.1:1555/student/create/',
+                url: 'http://pyhedgehog.pythonanywhere.com/student/create/',
                 delay: 500,
                 dataType: 'json',
                 processResults: function (data) {
