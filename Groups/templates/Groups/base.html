@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru" dir="ltr" style="height:100%">
  <head>
@@ -27,17 +26,37 @@
 
   </head>
  <header>
-    <nav class="navbar navbar-dark bg-dark">
-    <a class="badge badge-pill badge-primary" href="#">StepUnder</a>
-    <a class="navbar-brand" href="{% url 'home_page' %}">Home</a>
-    <a class="navbar-brand" href="{% url 'groups_list' %}">Groups</a>
-    <a class="navbar-brand" href="{% url 'students_list' %}">Students</a>
-    <a class="navbar-brand" href="{% url 'rating' %}">Rating</a>
-    <a class="navbar-brand" href="{% url 'profile' %}">Profile</a>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">StepUnder</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-        {% block search %}
-        {% endblock %}
-    </nav>
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="navbar-brand">
+        <a class="nav-link" href="{% url 'home_page' %}">Home <span class="sr-only"></span></a>
+      </li>
+      <li  class="navbar-brand">
+        <a class="nav-link" href="{% url 'groups_list' %}">Groups</a>
+      </li>
+      <li  class="navbar-brand">
+        <a class="nav-link" href="{% url 'students_list' %}">Students<span class="sr-only"></span></a>
+      </li>
+      <li class="navbar-brand">
+        <a class="nav-link" href="{% url 'rating' %}">Rating<span class="sr-only"></span></a>
+      </li>
+      <li class="navbar-brand">
+        <a class="nav-link" href="{% url 'toDoList' %}">Schedule<span class="sr-only"></span></a>
+      </li>
+      <li class="navbar-brand">
+        <a class="nav-link" href="{% url 'profile' %}">Profile<span class="sr-only"></span></a>
+      </li>
+    </ul>
+      {% block search %}
+      {% endblock %}
+  </div>
+</nav>
      </header>
     <body>
           {% block content %}

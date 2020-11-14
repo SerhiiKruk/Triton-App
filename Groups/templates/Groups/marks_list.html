@@ -9,6 +9,7 @@ Marks {{student.second_name}}
 <link type="text/css" rel="stylesheet" href="{% static 'css/object_list.css' %}">
 {% endblock %}
 
+
 {% block content %}
 {% if student.marks.count > 0 %}
 <h5>Average:{{student.avg_mark}}</h5>

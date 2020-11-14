@@ -13,6 +13,7 @@ urlpatterns = [
     path('signin', views.signin, name='signin_url'),
     path('signout', views.signout, name='signout_url'),
     path('profile', views.profile, name='profile'),
+    path('toDoList', views.toDoList, name='toDoList'),
     path('add_profile/', views.profile_add, name='profile_add'),
 
     path('api/students', views.StudentsView.as_view()),

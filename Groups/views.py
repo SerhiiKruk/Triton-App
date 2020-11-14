@@ -1,5 +1,4 @@
 import json
-
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -25,13 +24,20 @@ from .tokens import account_activation_token
 def home_page(request):
     return render(request, 'Groups/home_page.html')
 
+@login_required()
+def toDoList(request):
+    if request.user.profile.student is not None:
+        return render(request, 'Groups/toDoList.html')
+    else:
+        return redirect('profile_add')
+
 @login_required
 def profile(request):
-    if request.user.profile is not None:
+    if request.user.profile.student is not None:
         student = request.user.profile.student
         return render(request, 'Groups/profile.html', {'student': student})
     else:
-        redirect('profile_add')
+        return redirect('profile_add')
 
 @login_required
 def profile_add(request):
@@ -62,7 +68,7 @@ def profile_add(request):
 def best_gpa(request):
     if request.user.is_active:
         request.user.refresh_from_db()
-        if request.user.profile is not None:
+        if request.user.profile.student is not None:
             group = request.user.profile.student.group_id
             data = Student.objects.filter(group_id=group) \
             .values('first_name', 'second_name', 'avg_mark') \
@@ -191,17 +197,8 @@ def activate(request, uidb64, token):
 
 class GroupsList(View):
     def get(self, request):
-        search_query = request.GET.get('search', '')
-
-        if (search_query):
-            groups = Group.objects.filter(Q(name__icontains=search_query)).order_by('name')
-            search = '&search={}'.format(search_query)
-        else:
-            groups = Group.objects.all().order_by('name')
-            search = ''
-
-        context = get_context_pagintaion(request, groups, search)
-        return render(request, 'Groups/groups_list.html', context={'context': context})
+        groups = Group.objects.all().order_by('name')
+        return render(request, 'Groups/groups_list.html', context={'groups': groups})
 
 class StudentsList(View):
     def get(self, request):
@@ -300,7 +297,6 @@ class GroupCreate(View):
 
     def post(self, request):
             bound_form = GroupForm(request.POST)
-
             if bound_form.is_valid():
                 new_group = bound_form.save()
                 return redirect('groups_list')
